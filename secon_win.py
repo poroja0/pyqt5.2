@@ -51,6 +51,33 @@ class TestWin(QWidget):
             self.timer.stop()
 
 
+    
+    def timerEvent2(self):
+        global time 
+        time = time.addSecs(-1)
+        self.text_timer.setText(time.toString('hh:mm:ss')[6:8])
+        self.i+=1
+        self.text_timer.setFont(QFont('Times', 36+self.i, QFont.Bold))
+        
+        if time.toString('hh:mm:ss') == '00:00:00':
+            self.timer.stop()
+
+    def timerEvent3(self):
+        global time 
+        time = time.addSecs(-1)
+        self.text_timer.setText(time.toString('hh:mm:ss'))
+        self.i+=1
+        self.text_timer.setFont(QFont('Times', 36+self.i, QFont.Bold))
+        
+        if int(self.text_timer.text()[6:8]) >= 45 or int(self.text_timer.text()[6:8]) <=15:
+           self.text_timer.setStyleSheet('color: rgb(0,255,0)')
+        else:
+           self.text_timer.setStyleSheet('color: rgb(0,0,0)')
+
+
+
+        if time.toString('hh:mm:ss') == '00:00:00':
+            self.timer.stop()
 
 
 
@@ -64,8 +91,23 @@ class TestWin(QWidget):
         self.timer.timeout.connect(self.timerEvent)
         self.timer.start(1000)
         
-
     
+    def timer2(self):
+        self.text_timer.setFont(QFont('Times', 36, QFont.Bold))
+        global time
+        time = QTime(0,0,30)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timerEvent2)
+        self.timer.start(1500)
+    
+    def timer3(self):
+        self.text_timer.setFont(QFont('Times', 36, QFont.Bold))
+        global time
+        time = QTime(0,1,0)
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.timerEvent3)
+        self.timer.start(1000)
+        
 
     def initUI(self):
        ''' создаёт графические элементы '''
@@ -130,14 +172,15 @@ class TestWin(QWidget):
 
 
     def next_click(self):
-       self.tw = Result_win()
+       self.tw = Result_win(self.text_pol1.text(), self.text_pol2.text(), self.text_pol3.text(), self.text_pol4.text())
        self.hide()
 
 
     def connects(self):
        self.but4.clicked.connect(self.next_click)
        self.but1.clicked.connect(self.timer1)
-
+       self.but2.clicked.connect(self.timer2)
+       self.but3.clicked.connect(self.timer3)
 
    
     def set_appear(self):
